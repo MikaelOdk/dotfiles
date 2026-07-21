@@ -61,6 +61,7 @@ declare -A MODULES=(
     ["apt"]="System dependencies (build-essential, curl, etc.)"
     ["zsh"]="Zsh shell and oh-my-posh"
     ["tmux"]="Tmux terminal multiplexer"
+    ["herdr"]="Herdr terminal workspace manager"
     ["nvim"]="Neovim (latest stable from GitHub)"
     ["mise"]="mise runtime manager"
     ["node"]="Node.js LTS, bun, pnpm, npm packages"
@@ -74,7 +75,7 @@ declare -A MODULES=(
 )
 
 # Order for full install
-INSTALL_ORDER=(apt ssh zsh tmux nvim mise node rust dotnet tools claude git dotfiles)
+INSTALL_ORDER=(apt ssh zsh tmux herdr nvim mise node rust dotnet tools claude git dotfiles)
 
 show_help() {
     echo "Dotfiles Bootstrap Script"
