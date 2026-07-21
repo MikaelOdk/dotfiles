@@ -80,8 +80,10 @@ EOF
     fi
 
     echo "Git configuration complete!"
-    echo "  Name:  $(git config --global user.name)"
-    echo "  Email: $(git config --global user.email)"
+    # --includes: with an explicit scope, git config skips include.path by
+    # default, which would print these as empty.
+    echo "  Name:  $(git config --global --includes user.name)"
+    echo "  Email: $(git config --global --includes user.email)"
 }
 
 setup_git
