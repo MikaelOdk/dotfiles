@@ -11,7 +11,17 @@ install_claude_config() {
 
     mkdir -p "$TARGET_DIR/skills"
 
-    cp "$SOURCE_DIR/settings.json" "$TARGET_DIR/settings.json"
+    # settings.json embeds absolute paths to directory marketplaces, synced
+    # from whichever machine committed last. Rewrite their home prefix for
+    # this machine so the same template works everywhere.
+    if command -v jq &> /dev/null; then
+        jq --arg home "$HOME" \
+            '(.extraKnownMarketplaces[]?.source | select(.source == "directory").path) |= sub("^/home/[^/]+"; $home)' \
+            "$SOURCE_DIR/settings.json" > "$TARGET_DIR/settings.json"
+    else
+        echo "  [WARN] jq not found: marketplace paths in settings.json keep their original home prefix"
+        cp "$SOURCE_DIR/settings.json" "$TARGET_DIR/settings.json"
+    fi
     cp "$SOURCE_DIR/CLAUDE.md" "$TARGET_DIR/CLAUDE.md"
     cp "$SOURCE_DIR/statusline.sh" "$TARGET_DIR/statusline.sh"
     chmod +x "$TARGET_DIR/statusline.sh"
