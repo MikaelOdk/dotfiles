@@ -64,10 +64,18 @@ copy_dotfiles() {
     echo "  - Oh My Posh config"
     cp "$DOTFILES_DIR/config/ohmyposh/zen.toml" "$HOME/.config/ohmyposh/"
 
-    # On WSL, sync the Tridactyl config to the Windows user profile so Firefox
-    # (running on Windows) picks up the nvim editor integration. Skipped on a
-    # native Linux box where there's no Windows side.
+    # WSL-only integrations, skipped on a native Linux box where there's no
+    # Windows side.
     if grep -qiE '(microsoft|wsl)' /proc/version 2>/dev/null; then
+        # ii: reveal a WSL path in Windows Explorer, like PowerShell's
+        # Invoke-Item. ~/.local/bin is already on PATH via .zshrc.
+        echo "  - WSL helper: ii"
+        mkdir -p "$HOME/.local/bin"
+        cp "$DOTFILES_DIR/bin/ii" "$HOME/.local/bin/ii"
+        chmod +x "$HOME/.local/bin/ii"
+
+        # Sync the Tridactyl config to the Windows user profile so Firefox
+        # (running on Windows) picks up the nvim editor integration.
         echo "  - Tridactyl config (Windows side, via WSL)"
         win_home="$(wslpath "$(cmd.exe /c 'echo %USERPROFILE%' 2>/dev/null | tr -d '\r')" 2>/dev/null || true)"
         if [[ -n "$win_home" && -d "$win_home" ]]; then
